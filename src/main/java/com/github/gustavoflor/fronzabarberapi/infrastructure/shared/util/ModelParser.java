@@ -16,4 +16,5 @@ public class ModelParser {
                 .map(source -> mapper.map(source, destinationType))
                 .orElse(null);
     }
+
 }

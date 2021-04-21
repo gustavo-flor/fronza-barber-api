@@ -13,22 +13,22 @@ import java.util.Optional;
 @AllArgsConstructor
 public class UserService {
 
-    private final UserRepository repository;
+    private final UserRepository userRepository;
 
     public User insert(User user) {
-        return repository.saveAndFlush(user);
+        return userRepository.saveAndFlush(user);
     }
 
     public Optional<User> findById(Long id) {
-        return repository.findById(id);
+        return userRepository.findById(id);
     }
 
     public Page<User> paginate(int page, int size) {
-        return repository.findAll(PageRequest.of(page, size));
+        return userRepository.findAll(PageRequest.of(page, size));
     }
 
     public void deleteById(Long id) {
-        repository.deleteById(id);
+        userRepository.deleteById(id);
     }
 
 }

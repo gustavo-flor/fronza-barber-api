@@ -20,19 +20,19 @@ import java.net.URI;
 @AllArgsConstructor
 public class UserController {
 
-    private final UserService service;
+    private final UserService userService;
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public ResponseEntity<UserDetailDTO> store(@Valid @RequestBody UserCreateDTO createDTO) {
-        User user = service.insert(createDTO.transform());
+        User user = userService.insert(createDTO.transform());
         URI location = URI.create(String.format("/users/%s", user.getId()));
         return ResponseEntity.created(location).body(UserDetailDTO.of(user));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDetailDTO> show(@PathVariable Long id) {
-        return service.findById(id)
+        return userService.findById(id)
                 .map(UserDetailDTO::of)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.noContent().build());
@@ -41,12 +41,12 @@ public class UserController {
     @Restrict(to = User.Authority.MANAGER)
     @GetMapping
     public ResponseEntity<Page<UserDetailDTO>> paginate(Pageable pageable) {
-        return ResponseEntity.ok(service.paginate(pageable.getPage(), pageable.getSize()).map(UserDetailDTO::of));
+        return ResponseEntity.ok(userService.paginate(pageable.getPage(), pageable.getSize()).map(UserDetailDTO::of));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> destroy(@PathVariable Long id) {
-        service.deleteById(id);
+        userService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 

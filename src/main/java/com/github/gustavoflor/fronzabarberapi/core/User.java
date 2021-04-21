@@ -22,7 +22,7 @@ public class User extends AbstractPersistableEntity<Long> {
     @Column(name = "NAME")
     private String name;
 
-    @ElementCollection(targetClass = Authority.class, fetch = FetchType.LAZY)
+    @ElementCollection(targetClass = Authority.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "USER_AUTHORITIES", joinColumns = @JoinColumn(name = "ID_USER"))
     @Enumerated(value = EnumType.STRING)
     @Column(name = "AUTHORITY")

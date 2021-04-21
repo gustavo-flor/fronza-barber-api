@@ -1,1 +1,14 @@
+server:
+  servlet:
+    context-path: /api
+  port: 8080
 
+spring:
+  datasource:
+    username: postgres
+    password: postgres
+    url: jdbc:postgresql://localhost:5432/fronza-barber-api
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
