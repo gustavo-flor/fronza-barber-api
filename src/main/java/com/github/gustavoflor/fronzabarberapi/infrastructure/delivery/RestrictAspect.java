@@ -20,7 +20,7 @@ public class RestrictAspect {
     @Before("restrictPointcut(restrict) && args(restrict)")
     public void aroundAdvice(Restrict restrict) {
         Optional.ofNullable(AuthenticationContext.currentUser()).ifPresent(currentUser -> {
-            if (Arrays.stream(restrict.to()).noneMatch(currentUser::hasAuthority)) {
+            if (Arrays.stream(restrict.to()).noneMatch(currentUser::hasRole)) {
                 throw new SecurityException();
             }
         });

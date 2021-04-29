@@ -1,5 +1,6 @@
 package com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.controller;
 
+import com.github.gustavoflor.fronzabarberapi.core.Role;
 import com.github.gustavoflor.fronzabarberapi.core.User;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.UserService;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.Pageable;
@@ -38,7 +39,7 @@ public class UserController {
                 .orElse(ResponseEntity.noContent().build());
     }
 
-    @Restrict(to = User.Authority.MANAGER)
+    @Restrict(to = Role.MANAGER)
     @GetMapping
     public ResponseEntity<Page<UserDetailDTO>> paginate(Pageable pageable) {
         return ResponseEntity.ok(userService.paginate(pageable.getPage(), pageable.getSize()).map(UserDetailDTO::of));

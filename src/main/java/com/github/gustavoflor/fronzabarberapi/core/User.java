@@ -22,18 +22,17 @@ public class User extends AbstractPersistableEntity<Long> {
     @Column(name = "NAME")
     private String name;
 
-    @ElementCollection(targetClass = Authority.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "USER_AUTHORITIES", joinColumns = @JoinColumn(name = "ID_USER"))
+    @Column(name = "EMAIL")
+    private String email;
+
+    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "USER_ROLES", joinColumns = @JoinColumn(name = "ID_USER"))
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "AUTHORITY")
-    private Set<Authority> authorities;
+    @Column(name = "ROLE")
+    private Set<Role> roles;
 
-    public enum Authority {
-        BARBER, MANAGER
-    }
-
-    public boolean hasAuthority(Authority authority) {
-        return getAuthorities().contains(authority);
+    public boolean hasRole(Role role) {
+        return getRoles().contains(role);
     }
 
 }
