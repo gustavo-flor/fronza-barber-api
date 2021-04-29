@@ -1,6 +1,5 @@
 package com.github.gustavoflor.fronzabarberapi.infrastructure.shared.util;
 
-import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.AuthenticationService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
