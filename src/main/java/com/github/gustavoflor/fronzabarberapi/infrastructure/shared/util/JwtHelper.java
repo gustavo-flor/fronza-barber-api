@@ -25,9 +25,14 @@ public class JwtHelper {
     public static String createToken(String subject) {
         return Jwts.builder()
                 .setSubject(subject)
+                .setIssuedAt(getIssuedAt())
                 .setExpiration(getExpiration())
                 .signWith(SIGNATURE_ALGORITHM, SECRET)
                 .compact();
+    }
+
+    private static Date getIssuedAt() {
+        return new Date(System.currentTimeMillis());
     }
 
     private static Date getExpiration() {

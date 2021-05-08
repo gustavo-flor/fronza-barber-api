@@ -1,11 +1,13 @@
 package com.github.gustavoflor.fronzabarberapi.infrastructure.shared.exception;
 
-public class EntityNotFoundException extends RuntimeException {
+import com.github.gustavoflor.fronzabarberapi.core.AbstractPersistableEntity;
 
-    private static final String MESSAGE = "Entity not found";
+public class EntityNotFoundException extends BusinessException {
 
-    public EntityNotFoundException() {
-        super(MESSAGE);
+    private static final String MESSAGE = "Entity not found, type: %s";
+
+    public EntityNotFoundException(Class<? extends AbstractPersistableEntity<?>> entityType) {
+        super(String.format(MESSAGE, entityType.getName()));
     }
 
 }

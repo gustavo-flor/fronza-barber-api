@@ -1,12 +1,10 @@
 package com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.controller;
 
-import com.github.gustavoflor.fronzabarberapi.core.Role;
 import com.github.gustavoflor.fronzabarberapi.core.User;
-import com.github.gustavoflor.fronzabarberapi.infrastructure.UserService;
+import com.github.gustavoflor.fronzabarberapi.infrastructure.business.UserService;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.Pageable;
-import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.Restrict;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.dto.UserCreateDTO;
-import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.dto.UserDetailDTO;
+import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.dto.UserShowDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -17,32 +15,33 @@ import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping(UserController.ENDPOINT)
 @AllArgsConstructor
 public class UserController {
+
+    public static final String ENDPOINT = "/users";
 
     private final UserService userService;
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public ResponseEntity<UserDetailDTO> store(@Valid @RequestBody UserCreateDTO createDTO) {
-        User user = userService.insert(createDTO.transform());
-        URI location = URI.create(String.format("/users/%s", user.getId()));
-        return ResponseEntity.created(location).body(UserDetailDTO.of(user));
+    public ResponseEntity<UserShowDTO> create(@Valid @RequestBody UserCreateDTO userCreateDTO) {
+        User user = userService.insert(userCreateDTO);
+        URI location = URI.create(String.format(ENDPOINT + "/%s", user.getId()));
+        return ResponseEntity.created(location).body(UserShowDTO.of(user));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDetailDTO> show(@PathVariable Long id) {
+    public ResponseEntity<UserShowDTO> show(@PathVariable Long id) {
         return userService.findById(id)
-                .map(UserDetailDTO::of)
+                .map(UserShowDTO::of)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.noContent().build());
     }
 
-    @Restrict(to = Role.MANAGER)
     @GetMapping
-    public ResponseEntity<Page<UserDetailDTO>> paginate(Pageable pageable) {
-        return ResponseEntity.ok(userService.paginate(pageable.getPage(), pageable.getSize()).map(UserDetailDTO::of));
+    public ResponseEntity<Page<UserShowDTO>> index(@Valid Pageable pageable) {
+        return ResponseEntity.ok(userService.paginate(pageable.get()).map(UserShowDTO::of));
     }
 
     @DeleteMapping("/{id}")

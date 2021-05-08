@@ -1,6 +1,5 @@
 package com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.dto;
 
-import com.github.gustavoflor.fronzabarberapi.core.Role;
 import com.github.gustavoflor.fronzabarberapi.core.User;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.shared.util.ModelParser;
 import lombok.Builder;
@@ -16,7 +15,10 @@ public class UserCreateDTO {
     @NotBlank
     private String name;
 
-    private Set<Role> authorities;
+    @NotBlank
+    private String email;
+
+    private Set<User.Role> roles;
 
     public User transform() {
         return ModelParser.transform(this, User.class);

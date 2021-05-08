@@ -1,6 +1,7 @@
 package com.github.gustavoflor.fronzabarberapi.infrastructure.delivery;
 
 import lombok.Data;
+import org.springframework.data.domain.PageRequest;
 
 import javax.validation.constraints.PositiveOrZero;
 
@@ -12,5 +13,9 @@ public class Pageable {
 
     @PositiveOrZero
     private Integer size = 8;
+
+    public PageRequest get() {
+        return PageRequest.of(getPage(), getSize());
+    }
 
 }
