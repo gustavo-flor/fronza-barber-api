@@ -38,7 +38,7 @@ public class Appointment extends AbstractPersistableEntity<Long> {
     @AllArgsConstructor
     public enum Status {
         PENDING(true, true, true),
-        ACCEPTED(true, false, false),
+        ACCEPTED(true, false, true),
         REFUSED(false, false, false),
         CANCELED(false, false, false);
 

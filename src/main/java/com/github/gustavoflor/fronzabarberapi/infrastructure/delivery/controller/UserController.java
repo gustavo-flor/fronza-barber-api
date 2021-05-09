@@ -27,7 +27,7 @@ public class UserController {
     @PostMapping
     public ResponseEntity<UserShowDTO> create(@Valid @RequestBody UserCreateDTO userCreateDTO) {
         User user = userService.insert(userCreateDTO);
-        URI location = URI.create(String.format(ENDPOINT + "/%s", user.getId()));
+        URI location = URI.create(ENDPOINT + "/" + user.getId());
         return ResponseEntity.created(location).body(UserShowDTO.of(user));
     }
 

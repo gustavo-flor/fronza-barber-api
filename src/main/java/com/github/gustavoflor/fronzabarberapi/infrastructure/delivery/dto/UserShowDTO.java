@@ -23,6 +23,9 @@ public class UserShowDTO {
     @NotBlank
     private String name;
 
+    @NotBlank
+    private String email;
+
     private Set<User.Role> roles;
 
     public static UserShowDTO of(User user) {

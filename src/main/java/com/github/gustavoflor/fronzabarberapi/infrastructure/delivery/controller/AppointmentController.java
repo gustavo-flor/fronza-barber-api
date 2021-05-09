@@ -27,7 +27,7 @@ public class AppointmentController {
     @PostMapping
     public ResponseEntity<AppointmentShowDTO> create(@Valid @RequestBody AppointmentCreateDTO appointmentCreateDTO) {
         Appointment appointment = appointmentService.insert(appointmentCreateDTO);
-        URI location = URI.create(String.format(ENDPOINT + "/%s", appointment.getId()));
+        URI location = URI.create(ENDPOINT + "/" + appointment.getId());
         return ResponseEntity.created(location).body(AppointmentShowDTO.of(appointment));
     }
 
