@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -86,6 +87,12 @@ public class ExceptionTranslator {
     @ExceptionHandler(UserIsNotBarberException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionDetail handleUserIsNotBarberException(UserIsNotBarberException exception, WebRequest request) {
+        return getResponse(exception, request);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionDetail handleMethodArgumentNotValidException(MethodArgumentNotValidException exception, WebRequest request) {
         return getResponse(exception, request);
     }
 

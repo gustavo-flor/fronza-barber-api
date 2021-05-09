@@ -1,7 +1,6 @@
 package com.github.gustavoflor.fronzabarberapi.infrastructure.shared.util;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.lang.Assert;
@@ -18,7 +17,7 @@ public class JwtHelper {
     @Value("${application.security.jwt.secret}")
     private String SECRET = "MySecret"; // TODO: Change injection of hardcoded String.
 
-    private final Long EXPIRATION_TIME = 860000000L;
+    private final Long EXPIRATION_TIME = 43200000L;
     private final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS512;
 
     public String createToken(String subject) {
@@ -40,12 +39,22 @@ public class JwtHelper {
         return new Date(System.currentTimeMillis() + EXPIRATION_TIME);
     }
 
-    public Optional<Jws<Claims>> getJws(String token) {
+    public Optional<Claims> getClaims(String token) {
         return Optional.ofNullable(token).map(JwtHelper::parseToken);
     }
 
-    private Jws<Claims> parseToken(String token) {
-        return Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token);
+    private Claims parseToken(String token) {
+        return Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token).getBody();
+    }
+
+    public boolean isValid(String token) {
+        return getClaims(token)
+                .map(claims -> claims.getSubject() != null && claims.getExpiration().after(new Date()))
+                .orElse(false);
+    }
+
+    public String getSubject(String token) {
+        return getClaims(token).map(Claims::getSubject).orElse(null);
     }
 
 }

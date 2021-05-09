@@ -3,6 +3,7 @@ package com.github.gustavoflor.fronzabarberapi.infrastructure.configuration;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.business.UserService;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.controller.UserController;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.filter.AuthenticationFilter;
+import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.filter.AuthorizationFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,6 +35,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
                 .anyRequest().authenticated();
         httpSecurity.addFilter(new AuthenticationFilter(authenticationManager()));
+        httpSecurity.addFilter(new AuthorizationFilter(authenticationManager(), userDetailsService()));
         httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 

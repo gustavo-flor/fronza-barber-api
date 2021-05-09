@@ -12,6 +12,7 @@ public class UserTestHelper {
                 .id(1L)
                 .name("Gustavo Flôr")
                 .email("gustavo.flor@mail.co")
+                .password("lorem-ipsum")
                 .roles(Set.of(User.Role.MANAGER, User.Role.BARBER))
                 .build();
     }

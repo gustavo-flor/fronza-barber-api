@@ -107,7 +107,8 @@ class UserControllerTest {
         doShowRequest(user.getId())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is(user.getName())))
-                .andExpect(jsonPath("$.email", is(user.getEmail())));
+                .andExpect(jsonPath("$.email", is(user.getEmail())))
+                .andExpect(jsonPath("$.password").doesNotExist());
     }
 
     @Test
