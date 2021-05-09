@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "APPOINTMENTS")
 @Data
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @Builder
 @AllArgsConstructor
@@ -28,10 +29,14 @@ public class Appointment extends AbstractPersistableEntity<Long> {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "CLIENT_USER_ID")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private User client;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "BARBER_USER_ID")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private User barber;
 
     @Getter

@@ -1,20 +1,18 @@
 package com.github.gustavoflor.fronzabarberapi.infrastructure.shared.util;
 
+import lombok.experimental.UtilityClass;
 import org.modelmapper.ModelMapper;
 
-import java.util.Optional;
-
+@UtilityClass
 public class ModelParser {
 
-    private ModelParser() {
-    }
+    private final ModelMapper mapper = new ModelMapper();
 
-    private static final ModelMapper mapper = new ModelMapper();
-
-    public static <T> T transform(Object object, Class<T> destinationType) {
-        return Optional.ofNullable(object)
-                .map(source -> mapper.map(source, destinationType))
-                .orElse(null);
+    public <T> T transform(Object object, Class<T> destinationType) {
+        if (object == null) {
+            return null;
+        }
+        return mapper.map(object, destinationType);
     }
 
 }

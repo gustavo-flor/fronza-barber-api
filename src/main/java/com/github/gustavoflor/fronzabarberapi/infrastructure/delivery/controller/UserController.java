@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -25,6 +26,7 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
+    @Transactional
     public ResponseEntity<UserShowDTO> create(@Valid @RequestBody UserCreateDTO userCreateDTO) {
         User user = userService.insert(userCreateDTO);
         URI location = URI.create(ENDPOINT + "/" + user.getId());
@@ -32,6 +34,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
+    @Transactional(readOnly = true)
     public ResponseEntity<UserShowDTO> show(@PathVariable Long id) {
         return userService.findById(id)
                 .map(UserShowDTO::of)
@@ -40,11 +43,13 @@ public class UserController {
     }
 
     @GetMapping
+    @Transactional(readOnly = true)
     public ResponseEntity<Page<UserShowDTO>> index(@Valid Pageable pageable) {
         return ResponseEntity.ok(userService.paginate(pageable.get()).map(UserShowDTO::of));
     }
 
     @DeleteMapping("/{id}")
+    @Transactional
     public ResponseEntity<Void> destroy(@PathVariable Long id) {
         userService.deleteById(id);
         return ResponseEntity.noContent().build();

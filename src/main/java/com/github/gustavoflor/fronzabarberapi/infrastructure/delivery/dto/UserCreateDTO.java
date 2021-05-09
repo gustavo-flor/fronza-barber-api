@@ -22,6 +22,9 @@ public class UserCreateDTO {
     @NotBlank
     private String email;
 
+    @NotBlank
+    private String password;
+
     private Set<User.Role> roles;
 
     public User transform() {

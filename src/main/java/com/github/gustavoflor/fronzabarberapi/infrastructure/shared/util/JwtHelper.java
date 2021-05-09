@@ -4,26 +4,27 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.stereotype.Component;
+import io.jsonwebtoken.lang.Assert;
+import lombok.experimental.UtilityClass;
+import org.springframework.beans.factory.annotation.Value;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.Optional;
+import java.util.UUID;
 
-@Component
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@UtilityClass
 public class JwtHelper {
 
-    private static final Long EXPIRATION_TIME = 860000000L;
-    private static final String SECRET = "MySecret";
-    private static final String TOKEN_PREFIX = "Bearer ";
-    private static final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS512;
+    @Value("${application.security.jwt.secret}")
+    private String SECRET = "MySecret"; // TODO: Change injection of hardcoded String.
 
-    public static String createToken(String subject) {
+    private final Long EXPIRATION_TIME = 860000000L;
+    private final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS512;
+
+    public String createToken(String subject) {
+        Assert.notNull(subject, "Subject cannot be null.");
         return Jwts.builder()
+                .setId(UUID.randomUUID().toString())
                 .setSubject(subject)
                 .setIssuedAt(getIssuedAt())
                 .setExpiration(getExpiration())
@@ -31,25 +32,19 @@ public class JwtHelper {
                 .compact();
     }
 
-    private static Date getIssuedAt() {
-        return new Date(System.currentTimeMillis());
+    private Date getIssuedAt() {
+        return new Date();
     }
 
-    private static Date getExpiration() {
+    private Date getExpiration() {
         return new Date(System.currentTimeMillis() + EXPIRATION_TIME);
     }
 
-    public static Optional<Jws<Claims>> getJws(HttpServletRequest request) {
-        return Optional.ofNullable(request.getHeader(HttpHeaders.AUTHORIZATION))
-                .map(JwtHelper::removeTokenPrefix)
-                .map(JwtHelper::parseToken);
+    public Optional<Jws<Claims>> getJws(String token) {
+        return Optional.ofNullable(token).map(JwtHelper::parseToken);
     }
 
-    private static String removeTokenPrefix(String token) {
-        return token.replace(TOKEN_PREFIX, "");
-    }
-
-    private static Jws<Claims> parseToken(String token) {
+    private Jws<Claims> parseToken(String token) {
         return Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token);
     }
 

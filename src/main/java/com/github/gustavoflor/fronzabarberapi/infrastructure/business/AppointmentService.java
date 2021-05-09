@@ -9,7 +9,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -22,7 +21,6 @@ public class AppointmentService {
 
     private final UserService userService;
 
-    @Transactional
     public Appointment insert(AppointmentCreateDTO appointmentCreateDTO) {
         Appointment appointment = appointmentCreateDTO.transform();
         if (appointment.getDate().isBefore(LocalDateTime.now())) {
@@ -32,17 +30,14 @@ public class AppointmentService {
         return appointmentRepository.saveAndFlush(appointment);
     }
 
-    @Transactional(readOnly = true)
     public Optional<Appointment> findById(Long id) {
         return appointmentRepository.findById(id);
     }
 
-    @Transactional(readOnly = true)
     public Page<Appointment> paginate(PageRequest pageRequest) {
         return appointmentRepository.findAll(pageRequest);
     }
 
-    @Transactional
     public void cancelById(Long id) {
         Appointment appointment = findById(id).orElseThrow(() -> new EntityNotFoundException(Appointment.class));
         if (!appointment.canCancel()) {
@@ -52,7 +47,6 @@ public class AppointmentService {
         appointmentRepository.saveAndFlush(appointment);
     }
 
-    @Transactional
     public void acceptById(Long id, Long barberId) {
         Appointment appointment = findById(id).orElseThrow(() -> new EntityNotFoundException(Appointment.class));
         if (!appointment.canAccept()) {
@@ -67,7 +61,6 @@ public class AppointmentService {
         appointmentRepository.saveAndFlush(appointment);
     }
 
-    @Transactional
     public void refuseById(Long id) {
         Appointment appointment = findById(id).orElseThrow(() -> new EntityNotFoundException(Appointment.class));
         if (!appointment.canRefuse()) {
