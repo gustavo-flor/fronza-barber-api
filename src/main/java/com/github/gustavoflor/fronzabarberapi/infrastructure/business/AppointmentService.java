@@ -12,6 +12,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -41,7 +42,11 @@ public class AppointmentService {
     }
 
     public void cancelById(Long id) {
+        User currentUser = userService.getCurrentUser().orElseThrow(() -> new AccessDeniedException("Acesso negado"));
         Appointment appointment = findById(id).orElseThrow(() -> new EntityNotFoundException(Appointment.class));
+        if (!Objects.equals(appointment.getClient().getId(), currentUser.getId())) {
+            throw new UserHasNotPermissionException();
+        }
         if (!appointment.canCancel()) {
             throw new NotAllowedToChangeAppointmentStatusException(appointment.getStatus(), Appointment.Status.CANCELED);
         }

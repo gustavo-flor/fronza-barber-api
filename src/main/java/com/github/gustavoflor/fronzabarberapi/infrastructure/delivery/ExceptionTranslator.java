@@ -102,6 +102,12 @@ public class ExceptionTranslator {
         return getResponse(exception, request, HttpStatus.UNAUTHORIZED.value());
     }
 
+    @ExceptionHandler(UserHasNotPermissionException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ExceptionDetail handleUserHasNotPermissionException(UserHasNotPermissionException exception, WebRequest request) {
+        return getResponse(exception, request, HttpStatus.FORBIDDEN.value());
+    }
+
     @Data
     @Builder
     @AllArgsConstructor

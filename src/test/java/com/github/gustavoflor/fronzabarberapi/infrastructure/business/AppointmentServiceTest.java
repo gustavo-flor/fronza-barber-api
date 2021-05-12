@@ -7,10 +7,7 @@ import com.github.gustavoflor.fronzabarberapi.core.UserTestHelper;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.dto.AppointmentCreateDTO;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.dto.AppointmentCreateDTOTestHelper;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.persistence.AppointmentRepository;
-import com.github.gustavoflor.fronzabarberapi.infrastructure.shared.exception.AppointmentDateInPastException;
-import com.github.gustavoflor.fronzabarberapi.infrastructure.shared.exception.EntityNotFoundException;
-import com.github.gustavoflor.fronzabarberapi.infrastructure.shared.exception.NotAllowedToChangeAppointmentStatusException;
-import com.github.gustavoflor.fronzabarberapi.infrastructure.shared.exception.UserIsNotBarberException;
+import com.github.gustavoflor.fronzabarberapi.infrastructure.shared.exception.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +17,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.security.access.AccessDeniedException;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -64,6 +62,21 @@ class AppointmentServiceTest {
         appointmentCreateDTO.setDate(LocalDateTime.now().minusDays(5L));
         Mockito.doReturn(Optional.of(UserTestHelper.dummy())).when(userService).getCurrentUser();
         Assertions.assertThrows(AppointmentDateInPastException.class, () -> appointmentService.insert(appointmentCreateDTO));
+    }
+
+    @Test
+    void shouldNotCancelWhenCurrentUserIsNotOwner() {
+        Long id = 1L;
+        User currentUser = UserTestHelper.dummy();
+        User client = UserTestHelper.dummy();
+        Appointment appointment = AppointmentTestHelper.dummy();
+        currentUser.setId(1L);
+        client.setId(2L);
+        appointment.setId(id);
+        appointment.setClient(client);
+        Mockito.doReturn(Optional.of(currentUser)).when(userService).getCurrentUser();
+        Mockito.doReturn(Optional.of(appointment)).when(appointmentRepository).findById(Objects.requireNonNull(id));
+        Assertions.assertThrows(UserHasNotPermissionException.class, () -> appointmentService.cancelById(id));
     }
 
     @Test
@@ -160,8 +173,9 @@ class AppointmentServiceTest {
     @Test
     void shouldNotAcceptWhenUserHasNotBarberRole() {
         Long id = 1L;
+        Long barberId = 1L;
         User barber = UserTestHelper.dummy();
-        Long barberId = barber.getId();
+        barber.setId(barberId);
         barber.setRoles(Set.of());
         Mockito.doReturn(Optional.of(AppointmentTestHelper.dummy())).when(appointmentRepository).findById(id);
         Mockito.doReturn(Optional.of(barber)).when(userService).findById(barberId);
