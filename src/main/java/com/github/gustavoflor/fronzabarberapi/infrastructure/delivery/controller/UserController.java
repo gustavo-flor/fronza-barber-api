@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,12 +43,14 @@ public class UserController {
                 .orElse(ResponseEntity.noContent().build());
     }
 
+    @PreAuthorize("hasAnyRole('MANAGER')")
     @GetMapping
     @Transactional(readOnly = true)
     public ResponseEntity<Page<UserShowDTO>> index(@Valid Pageable pageable) {
         return ResponseEntity.ok(userService.paginate(pageable.get()).map(UserShowDTO::of));
     }
 
+    @PreAuthorize("hasAnyRole('MANAGER')")
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity<Void> destroy(@PathVariable Long id) {

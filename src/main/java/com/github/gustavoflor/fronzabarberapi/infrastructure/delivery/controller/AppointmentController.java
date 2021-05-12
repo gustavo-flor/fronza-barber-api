@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +34,7 @@ public class AppointmentController {
         return ResponseEntity.created(location).body(AppointmentShowDTO.of(appointment));
     }
 
+    @PreAuthorize("hasAnyRole('MANAGER', 'BARBER')")
     @GetMapping("/{id}")
     @Transactional(readOnly = true)
     public ResponseEntity<AppointmentShowDTO> show(@PathVariable Long id) {
@@ -42,6 +44,7 @@ public class AppointmentController {
                 .orElse(ResponseEntity.noContent().build());
     }
 
+    @PreAuthorize("hasAnyRole('MANAGER', 'BARBER')")
     @GetMapping
     @Transactional(readOnly = true)
     public ResponseEntity<Page<AppointmentShowDTO>> index(@Valid Pageable pageable) {
@@ -55,6 +58,7 @@ public class AppointmentController {
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasAnyRole('MANAGER', 'BARBER')")
     @PatchMapping("/{id}/accept")
     @Transactional
     public ResponseEntity<Void> accept(@PathVariable Long id, @RequestParam(name = "barberId") Long barberId) {
@@ -62,6 +66,7 @@ public class AppointmentController {
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasAnyRole('MANAGER', 'BARBER')")
     @PatchMapping("/{id}/refuse")
     @Transactional
     public ResponseEntity<Void> refuse(@PathVariable Long id) {

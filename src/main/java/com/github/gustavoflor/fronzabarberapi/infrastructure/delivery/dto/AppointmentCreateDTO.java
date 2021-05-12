@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
@@ -19,10 +18,6 @@ public class AppointmentCreateDTO {
 
     @NotNull
     private LocalDateTime date;
-
-    @Valid
-    @NotNull
-    private PersistentEntityDTO<Long> client;
 
     public Appointment transform() {
         return ModelParser.transform(this, Appointment.class);

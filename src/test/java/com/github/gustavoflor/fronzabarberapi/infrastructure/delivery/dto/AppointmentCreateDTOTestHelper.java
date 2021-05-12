@@ -10,7 +10,6 @@ public class AppointmentCreateDTOTestHelper {
     public AppointmentCreateDTO dummy() {
         return AppointmentCreateDTO.builder()
                 .date(LocalDateTime.now().plusDays(3L))
-                .client(PersistentEntityDTO.of(1L))
                 .build();
     }
 

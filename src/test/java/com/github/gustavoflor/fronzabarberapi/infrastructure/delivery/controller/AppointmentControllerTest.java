@@ -62,22 +62,6 @@ class AppointmentControllerTest {
         doCreateRequest(appointmentCreateDTO).andExpect(status().isBadRequest());
     }
 
-    @Test
-    void shouldNotCreateWhenClientIsNull() throws Exception {
-        shouldNotCreateWhenClientIsInvalid(null);
-    }
-
-    @Test
-    void shouldNotCreateWhenClientDoNotHasId() throws Exception {
-        shouldNotCreateWhenClientIsInvalid(PersistentEntityDTO.of(null));
-    }
-
-    private void shouldNotCreateWhenClientIsInvalid(PersistentEntityDTO<Long> invalidClient) throws Exception {
-        AppointmentCreateDTO appointmentCreateDTO = AppointmentCreateDTOTestHelper.dummy();
-        appointmentCreateDTO.setClient(invalidClient);
-        doCreateRequest(appointmentCreateDTO).andExpect(status().isBadRequest());
-    }
-
     private ResultActions doCreateRequest(AppointmentCreateDTO appointmentCreateDTO) throws Exception {
         return mockMvc.perform(post(ENDPOINT).contentType(CONTENT_TYPE).content(TestUtil.toByte(appointmentCreateDTO)));
     }

@@ -8,6 +8,8 @@ import com.github.gustavoflor.fronzabarberapi.infrastructure.shared.util.Passwor
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -53,6 +55,18 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Username not found."));
+    }
+
+    public Optional<User> getCurrentUser() {
+        return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
+                .map(Authentication::getPrincipal)
+                .map(this::toUserDetails)
+                .map(UserDetails::getUsername)
+                .flatMap(userRepository::findByEmail);
+    }
+
+    private UserDetails toUserDetails(Object principal) {
+        return (UserDetails) principal;
     }
 
 }

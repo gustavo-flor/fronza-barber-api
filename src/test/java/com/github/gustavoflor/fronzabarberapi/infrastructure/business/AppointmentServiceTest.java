@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -41,17 +42,27 @@ class AppointmentServiceTest {
     @Test
     void shouldInsert() {
         AppointmentCreateDTO appointmentCreateDTO = AppointmentCreateDTOTestHelper.dummy();
+        User user = UserTestHelper.dummy();
+        Mockito.doReturn(Optional.of(user)).when(userService).getCurrentUser();
         Mockito.doAnswer(answer -> answer.getArgument(0, Appointment.class)).when(appointmentRepository).saveAndFlush(Mockito.any());
         Appointment appointment = appointmentService.insert(appointmentCreateDTO);
         Assertions.assertEquals(appointmentCreateDTO.getDate(), appointment.getDate());
-        Assertions.assertEquals(appointmentCreateDTO.getClient().getId(), appointment.getClient().getId());
+        Assertions.assertEquals(user.getId(), appointment.getClient().getId());
         Assertions.assertEquals(Appointment.Status.PENDING, appointment.getStatus());
+    }
+
+    @Test
+    void shouldNotInsertWhenHasNotCurrentUser() {
+        AppointmentCreateDTO appointmentCreateDTO = AppointmentCreateDTOTestHelper.dummy();
+        Mockito.doReturn(Optional.empty()).when(userService).getCurrentUser();
+        Assertions.assertThrows(AccessDeniedException.class, () -> appointmentService.insert(appointmentCreateDTO));
     }
 
     @Test
     void shouldNotInsertWhenDateInPast() {
         AppointmentCreateDTO appointmentCreateDTO = AppointmentCreateDTOTestHelper.dummy();
         appointmentCreateDTO.setDate(LocalDateTime.now().minusDays(5L));
+        Mockito.doReturn(Optional.of(UserTestHelper.dummy())).when(userService).getCurrentUser();
         Assertions.assertThrows(AppointmentDateInPastException.class, () -> appointmentService.insert(appointmentCreateDTO));
     }
 
