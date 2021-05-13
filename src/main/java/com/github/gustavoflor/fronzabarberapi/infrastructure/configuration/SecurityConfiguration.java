@@ -26,6 +26,17 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @AllArgsConstructor
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+    private static final String[] PUBLIC_MATCHERS = {
+            "/v2/api-docs",
+            "/v3/api-docs",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-resources/**",
+            "/swagger-ui/**",
+            "/webjars/**",
+            "/actuator/**"
+    };
+
     private static final String[] PUBLIC_MATCHERS_POST = { UserController.ENDPOINT };
 
     private final UserService userService;
@@ -34,6 +45,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.cors().and().csrf().disable();
         httpSecurity.authorizeRequests()
+                .antMatchers(PUBLIC_MATCHERS).permitAll()
                 .antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
                 .anyRequest().authenticated();
         httpSecurity.addFilter(new AuthenticationFilter(authenticationManager()));
