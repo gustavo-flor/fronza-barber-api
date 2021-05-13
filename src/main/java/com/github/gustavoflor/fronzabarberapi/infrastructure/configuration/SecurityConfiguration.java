@@ -1,6 +1,6 @@
 package com.github.gustavoflor.fronzabarberapi.infrastructure.configuration;
 
-import com.github.gustavoflor.fronzabarberapi.infrastructure.business.UserService;
+import com.github.gustavoflor.fronzabarberapi.infrastructure.business.service.UserService;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.controller.UserController;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.filter.AuthenticationFilter;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.filter.AuthorizationFilter;

@@ -1,7 +1,7 @@
 package com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.controller;
 
 import com.github.gustavoflor.fronzabarberapi.core.User;
-import com.github.gustavoflor.fronzabarberapi.infrastructure.business.UserService;
+import com.github.gustavoflor.fronzabarberapi.infrastructure.business.service.UserService;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.Pageable;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.dto.UserCreateDTO;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.dto.UserShowDTO;

@@ -1,4 +1,4 @@
-package com.github.gustavoflor.fronzabarberapi.infrastructure.business;
+package com.github.gustavoflor.fronzabarberapi.infrastructure.business.service;
 
 import com.github.gustavoflor.fronzabarberapi.core.Appointment;
 import com.github.gustavoflor.fronzabarberapi.core.User;

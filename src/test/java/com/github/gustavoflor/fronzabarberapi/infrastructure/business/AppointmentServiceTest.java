@@ -4,6 +4,8 @@ import com.github.gustavoflor.fronzabarberapi.core.Appointment;
 import com.github.gustavoflor.fronzabarberapi.core.AppointmentTestHelper;
 import com.github.gustavoflor.fronzabarberapi.core.User;
 import com.github.gustavoflor.fronzabarberapi.core.UserTestHelper;
+import com.github.gustavoflor.fronzabarberapi.infrastructure.business.service.AppointmentService;
+import com.github.gustavoflor.fronzabarberapi.infrastructure.business.service.UserService;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.dto.AppointmentCreateDTO;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.dto.AppointmentCreateDTOTestHelper;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.persistence.AppointmentRepository;

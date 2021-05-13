@@ -2,7 +2,7 @@ package com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.controlle
 
 import com.github.gustavoflor.fronzabarberapi.core.User;
 import com.github.gustavoflor.fronzabarberapi.core.UserTestHelper;
-import com.github.gustavoflor.fronzabarberapi.infrastructure.business.UserService;
+import com.github.gustavoflor.fronzabarberapi.infrastructure.business.service.UserService;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.ExceptionTranslator;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.dto.UserCreateDTO;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.dto.UserCreateDTOTestHelper;
@@ -102,8 +102,10 @@ class UserControllerTest {
 
     @Test
     void shouldShow() throws Exception {
+        Long id = 1L;
         User user = UserTestHelper.dummy();
-        Mockito.doReturn(Optional.of(user)).when(userService).findById(user.getId());
+        user.setId(id);
+        Mockito.doReturn(Optional.of(user)).when(userService).findById(id);
         doShowRequest(user.getId())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is(user.getName())))

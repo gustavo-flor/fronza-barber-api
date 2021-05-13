@@ -2,11 +2,10 @@ package com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.controlle
 
 import com.github.gustavoflor.fronzabarberapi.core.Appointment;
 import com.github.gustavoflor.fronzabarberapi.core.AppointmentTestHelper;
-import com.github.gustavoflor.fronzabarberapi.infrastructure.business.AppointmentService;
+import com.github.gustavoflor.fronzabarberapi.infrastructure.business.service.AppointmentService;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.ExceptionTranslator;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.dto.AppointmentCreateDTO;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.dto.AppointmentCreateDTOTestHelper;
-import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.dto.PersistentEntityDTO;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.shared.util.TestUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -12,7 +12,6 @@ public class UserCreateDTOTestHelper {
         return UserCreateDTO.builder()
                 .name("Gustavo Flôr")
                 .email("gustavo.flor@mail.co")
-                .password("lorem-ipsum")
                 .roles(Set.of(User.Role.MANAGER, User.Role.BARBER))
                 .build();
     }

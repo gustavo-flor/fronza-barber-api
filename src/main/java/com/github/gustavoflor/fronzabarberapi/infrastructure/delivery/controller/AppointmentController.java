@@ -1,7 +1,7 @@
 package com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.controller;
 
 import com.github.gustavoflor.fronzabarberapi.core.Appointment;
-import com.github.gustavoflor.fronzabarberapi.infrastructure.business.AppointmentService;
+import com.github.gustavoflor.fronzabarberapi.infrastructure.business.service.AppointmentService;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.Pageable;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.dto.AppointmentCreateDTO;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.dto.AppointmentShowDTO;

@@ -1,6 +1,8 @@
 package com.github.gustavoflor.fronzabarberapi.infrastructure.business;
 
 import com.github.gustavoflor.fronzabarberapi.core.User;
+import com.github.gustavoflor.fronzabarberapi.infrastructure.business.provider.MockMailProvider;
+import com.github.gustavoflor.fronzabarberapi.infrastructure.business.service.UserService;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.dto.UserCreateDTO;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.dto.UserCreateDTOTestHelper;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.persistence.UserRepository;
@@ -22,7 +24,7 @@ class UserServiceTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        userService = new UserService(userRepository);
+        userService = new UserService(userRepository, new MockMailProvider());
     }
 
     @Test
