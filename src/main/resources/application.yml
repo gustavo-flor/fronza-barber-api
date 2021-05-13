@@ -12,13 +12,13 @@ spring:
     hibernate:
       ddl-auto: create-drop
     show-sql: true
-  profiles:
-    active: development
+  mail:
+    username: CHANGEME
+    password: CHANGEME
 
 application:
   mail:
-    sender: address@domain.com
-    recipient: address@domain.com
+    sender: changeme@domain.com
   security:
     jwt:
       secret: d41d8cd98f00b204e9800998ecf8427e
