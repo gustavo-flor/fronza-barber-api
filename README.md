@@ -2,6 +2,8 @@
 
 Aplicação para consulta e agendamento de barbeiros , usando Spring Boot.
 
+[![Build Status](https://travis-ci.org/gustavo-flor/fronza-barber-api.svg?branch=main)](https://travis-ci.org/gustavo-flor/fronza-barber-api)
+
 ---
 
 ## Instalação
