@@ -85,6 +85,7 @@ class AppointmentServiceTest {
     void shouldNotCancelWhenAppointmentDoNotExists() {
         Long id = 1L;
         Mockito.doReturn(Optional.empty()).when(appointmentRepository).findById(id);
+        Mockito.doReturn(Optional.of(UserTestHelper.dummy())).when(userService).getCurrentUser();
         Assertions.assertThrows(EntityNotFoundException.class, () -> appointmentService.cancelById(id));
     }
 
@@ -118,6 +119,7 @@ class AppointmentServiceTest {
         Appointment appointment = AppointmentTestHelper.dummy();
         appointment.setStatus(notCancelableStatus);
         Mockito.doReturn(Optional.of(appointment)).when(appointmentRepository).findById(id);
+        Mockito.doReturn(Optional.of(UserTestHelper.dummy())).when(userService).getCurrentUser();
         Assertions.assertThrows(NotAllowedToChangeAppointmentStatusException.class, () -> appointmentService.cancelById(id));
     }
 
