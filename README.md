@@ -3,6 +3,7 @@
 Aplicação para consulta e agendamento de barbeiros , usando Spring Boot + TravisCI.
 
 [![Build Status](https://travis-ci.com/gustavo-flor/fronza-barber-api.svg?branch=main)](https://travis-ci.com/gustavo-flor/fronza-barber-api)
+
 ---
 
 ## Instalação
@@ -29,7 +30,7 @@ CREATE DATABASE fronza-barber-api
 
 - Permitir acesso à sua Conta em [Configurações do Google](https://accounts.google.com/b/1/DisplayUnlockCaptcha);
 
-> Uma outra opção é ativar o profile de `test` via `application.yml`, dessa forma os e-mails enviados pela aplicação serão *logados* no console.
+> Uma outra opção é ativar o profile de `test` via `JVM System Parameter` com o comando `-Dspring.profiles.active=test`, dessa forma os e-mails enviados pela aplicação serão *logados* no console.
 
 ### Deploy
 

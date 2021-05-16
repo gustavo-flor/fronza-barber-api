@@ -3,6 +3,7 @@ package com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.controlle
 import com.github.gustavoflor.fronzabarberapi.core.User;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.business.service.UserService;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.Pageable;
+import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.dto.UserChangePasswordDTO;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.dto.UserCreateDTO;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.dto.UserShowDTO;
 import lombok.AllArgsConstructor;
@@ -55,6 +56,13 @@ public class UserController {
     @Transactional
     public ResponseEntity<Void> destroy(@PathVariable Long id) {
         userService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/settings/change-password")
+    @Transactional
+    public ResponseEntity<Void> changePassword(@Valid @RequestBody UserChangePasswordDTO userChangePasswordDTO) {
+        userService.changePassword(userChangePasswordDTO);
         return ResponseEntity.noContent().build();
     }
 

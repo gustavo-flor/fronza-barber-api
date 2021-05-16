@@ -4,6 +4,8 @@ import com.github.gustavoflor.fronzabarberapi.core.User;
 import com.github.gustavoflor.fronzabarberapi.core.UserTestHelper;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.business.service.UserService;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.ExceptionTranslator;
+import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.dto.UserChangePasswordDTO;
+import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.dto.UserChangePasswordDTOTestHelper;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.dto.UserCreateDTO;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.dto.UserCreateDTOTestHelper;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.shared.util.TestUtil;
@@ -16,13 +18,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 class UserControllerTest {
@@ -122,6 +124,55 @@ class UserControllerTest {
 
     private ResultActions doShowRequest(Long id) throws Exception {
         return mockMvc.perform(get(ENDPOINT + "/" + id));
+    }
+
+    @Test
+    void shouldNotChangePasswordWhenNewPasswordIsNull() throws Exception {
+        shouldNotCreateWhenEmailIsInvalid(null);
+    }
+
+    @Test
+    void shouldNotChangePasswordWhenNewPasswordIsEmpty() throws Exception {
+        shouldNotCreateWhenEmailIsInvalid("");
+    }
+
+    @Test
+    void shouldNotChangePasswordWhenNewPasswordIsBlank() throws Exception {
+        shouldNotCreateWhenEmailIsInvalid(" ");
+    }
+
+    private void shouldNotChangePasswordWhenNewPasswordIsInvalid(String invalidNewPassword) throws Exception {
+        UserChangePasswordDTO userChangePasswordDTO = UserChangePasswordDTOTestHelper.dummy();
+        userChangePasswordDTO.setNewPassword(invalidNewPassword);
+        doChangePasswordRequest(userChangePasswordDTO).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldNotChangePasswordWhenOldPasswordIsNull() throws Exception {
+        shouldNotCreateWhenEmailIsInvalid(null);
+    }
+
+    @Test
+    void shouldNotChangePasswordWhenOldPasswordIsEmpty() throws Exception {
+        shouldNotCreateWhenEmailIsInvalid("");
+    }
+
+    @Test
+    void shouldNotChangePasswordWhenOldPasswordIsBlank() throws Exception {
+        shouldNotCreateWhenEmailIsInvalid(" ");
+    }
+
+    private void shouldNotChangePasswordWhenOldPasswordIsInvalid(String invalidOldPassword) throws Exception {
+        UserChangePasswordDTO userChangePasswordDTO = UserChangePasswordDTOTestHelper.dummy();
+        userChangePasswordDTO.setNewPassword(invalidOldPassword);
+        doChangePasswordRequest(userChangePasswordDTO).andExpect(status().isBadRequest());
+    }
+
+    private ResultActions doChangePasswordRequest(UserChangePasswordDTO userChangePasswordDTO) throws Exception {
+        MockHttpServletRequestBuilder request = patch(ENDPOINT + "/settings/change-password")
+                .contentType(CONTENT_TYPE)
+                .content(TestUtil.toByte(userChangePasswordDTO));
+        return mockMvc.perform(request);
     }
 
 }

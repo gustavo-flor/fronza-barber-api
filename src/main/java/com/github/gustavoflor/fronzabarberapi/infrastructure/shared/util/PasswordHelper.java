@@ -13,4 +13,8 @@ public class PasswordHelper {
         return passwordEncoder.encode(decodedPassword);
     }
 
+    public boolean matches(String decodedPassword, String encodedPassword) {
+        return passwordEncoder.matches(decodedPassword, encodedPassword);
+    }
+
 }

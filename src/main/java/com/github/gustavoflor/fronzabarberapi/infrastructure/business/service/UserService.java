@@ -2,6 +2,7 @@ package com.github.gustavoflor.fronzabarberapi.infrastructure.business.service;
 
 import com.github.gustavoflor.fronzabarberapi.core.User;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.business.provider.MailProvider;
+import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.dto.UserChangePasswordDTO;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.delivery.dto.UserCreateDTO;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.persistence.UserRepository;
 import com.github.gustavoflor.fronzabarberapi.infrastructure.shared.exception.UserEmailAlreadyExistsException;
@@ -20,6 +21,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -43,8 +45,7 @@ public class UserService implements UserDetailsService {
             throw new UserEmailAlreadyExistsException();
         }
         String password = UUID.randomUUID().toString();
-        user.setPassword(password);
-        encodePassword(user);
+        user.setPassword(encodePassword(password));
         userRepository.saveAndFlush(user);
         mailProvider.send(createWelcomeMailMessage(user, password));
         return user;
@@ -60,8 +61,9 @@ public class UserService implements UserDetailsService {
         return message;
     }
 
-    private void encodePassword(User user) {
-        Optional.ofNullable(user.getPassword()).ifPresent(password -> user.setPassword(PasswordHelper.encode(password)));
+    private String encodePassword(String password) {
+        Objects.requireNonNull(password);
+        return PasswordHelper.encode(password);
     }
 
     public Optional<User> findById(Long id) {
@@ -95,13 +97,18 @@ public class UserService implements UserDetailsService {
     public Optional<User> getCurrentUser() {
         return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
                 .map(Authentication::getPrincipal)
-                .map(this::toUserDetails)
-                .map(UserDetails::getUsername)
+                .map(Object::toString)
                 .flatMap(userRepository::findByEmail);
     }
 
-    private UserDetails toUserDetails(Object principal) {
-        return (UserDetails) principal;
+    public void changePassword(UserChangePasswordDTO userChangePasswordDTO) {
+        User currentUser = getCurrentUser().orElseThrow(() -> new AccessDeniedException("Acesso negado"));
+        boolean match = PasswordHelper.matches(userChangePasswordDTO.getOldPassword(), currentUser.getPassword());
+        if (!match) {
+            throw new UserHasNotPermissionException();
+        }
+        currentUser.setPassword(encodePassword(userChangePasswordDTO.getNewPassword()));
+        userRepository.saveAndFlush(currentUser);
     }
 
 }
