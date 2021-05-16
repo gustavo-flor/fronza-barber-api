@@ -21,11 +21,15 @@ Aplicação para consulta e agendamento de barbeiros , usando Spring Boot + Trav
 CREATE DATABASE fronza-barber-api
 ```
 
+#### Configuração do envio de email
+
 > Para que o envio de e-mail funcione corretamente é necessário configurar os itens `spring.mail.username` e `spring.mail.password` presentes em `src > main > resources > application.yml`, esses valores são respectivamente o endereço de e-mail do google e a sua senha.
 
 - Ativar opção de `Permitir aplicativos menos seguros` em [Configurações do Google](https://myaccount.google.com/u/1/lesssecureapps);
 
 - Permitir acesso à sua Conta em [Configurações do Google](https://accounts.google.com/b/1/DisplayUnlockCaptcha);
+
+> Uma outra opção é ativar o profile de `test` via `application.yml`, dessa forma os e-mails enviados pela aplicação serão *logados* no console.
 
 ### Deploy
 
