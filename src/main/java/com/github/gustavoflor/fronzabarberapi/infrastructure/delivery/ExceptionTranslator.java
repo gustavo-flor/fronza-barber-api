@@ -16,23 +16,33 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestControllerAdvice
 public class ExceptionTranslator {
 
     public ExceptionDetail getResponse(Exception exception, WebRequest request, Integer status) {
-        return getResponse(exception, request, status, false);
+        return getResponse(exception, request, status, List.of(exception.getMessage()));
+    }
+
+    public ExceptionDetail getResponse(Exception exception, WebRequest request, Integer status, List<String> messages) {
+        return getResponse(exception, request, status, messages, false);
     }
 
     public ExceptionDetail getResponseAndLogTrace(Exception exception, WebRequest request, Integer status) {
-        return getResponse(exception, request, status, true);
+        return getResponseAndLogTrace(exception, request, status, List.of(exception.getMessage()));
     }
 
-    private ExceptionDetail getResponse(Exception exception, WebRequest request, Integer status, boolean logFullyException) {
+    public ExceptionDetail getResponseAndLogTrace(Exception exception, WebRequest request, Integer status, List<String> messages) {
+        return getResponse(exception, request, status, messages, true);
+    }
+
+    private ExceptionDetail getResponse(Exception exception, WebRequest request, Integer status, List<String> messages, boolean logFullyException) {
         ExceptionDetail detail = ExceptionDetail.builder()
                 .error(exception.getClass().getSimpleName())
-                .message(exception.getMessage())
+                .messages(messages)
                 .timestamp(LocalDateTime.now())
                 .status(status)
                 .path(getPath(request))
@@ -57,12 +67,6 @@ public class ExceptionTranslator {
     @ExceptionHandler(BusinessException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionDetail handleBusinessException(BusinessException exception, WebRequest request) {
-        return getResponse(exception, request, HttpStatus.BAD_REQUEST.value());
-    }
-
-    @ExceptionHandler(AppointmentDateInPastException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionDetail handleAppointmentDateInPastException(AppointmentDateInPastException exception, WebRequest request) {
         return getResponse(exception, request, HttpStatus.BAD_REQUEST.value());
     }
 
@@ -93,7 +97,13 @@ public class ExceptionTranslator {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionDetail handleMethodArgumentNotValidException(MethodArgumentNotValidException exception, WebRequest request) {
-        return getResponse(exception, request, HttpStatus.BAD_REQUEST.value());
+        String templateMessage = "%s: %s";
+        List<String> messages = exception.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(fieldError -> String.format(templateMessage, fieldError.getField(), fieldError.getDefaultMessage()))
+                .collect(Collectors.toList());
+        return getResponse(exception, request, HttpStatus.BAD_REQUEST.value(), messages);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
@@ -116,7 +126,7 @@ public class ExceptionTranslator {
         private LocalDateTime timestamp;
         private Integer status;
         private String error;
-        private String message;
+        private List<String> messages;
         private String path;
     }
 

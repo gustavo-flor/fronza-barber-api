@@ -59,14 +59,6 @@ class AppointmentServiceTest {
     }
 
     @Test
-    void shouldNotInsertWhenDateInPast() {
-        AppointmentCreateDTO appointmentCreateDTO = AppointmentCreateDTOTestHelper.dummy();
-        appointmentCreateDTO.setDate(LocalDateTime.now().minusDays(5L));
-        Mockito.doReturn(Optional.of(UserTestHelper.dummy())).when(userService).getCurrentUser();
-        Assertions.assertThrows(AppointmentDateInPastException.class, () -> appointmentService.insert(appointmentCreateDTO));
-    }
-
-    @Test
     void shouldNotCancelWhenCurrentUserIsNotOwner() {
         Long id = 1L;
         User currentUser = UserTestHelper.dummy();

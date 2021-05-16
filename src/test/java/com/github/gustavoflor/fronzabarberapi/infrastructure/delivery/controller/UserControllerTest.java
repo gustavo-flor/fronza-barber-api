@@ -92,6 +92,11 @@ class UserControllerTest {
         shouldNotCreateWhenEmailIsInvalid(" ");
     }
 
+    @Test
+    void shouldNotCreateWhenEmailHasNotAtSign() throws Exception {
+        shouldNotCreateWhenEmailIsInvalid("mail-without.at.sign");
+    }
+
     private void shouldNotCreateWhenEmailIsInvalid(String invalidEmail) throws Exception {
         UserCreateDTO userCreateDTO = UserCreateDTOTestHelper.dummy();
         userCreateDTO.setEmail(invalidEmail);
@@ -128,17 +133,17 @@ class UserControllerTest {
 
     @Test
     void shouldNotChangePasswordWhenNewPasswordIsNull() throws Exception {
-        shouldNotCreateWhenEmailIsInvalid(null);
+        shouldNotChangePasswordWhenNewPasswordIsInvalid(null);
     }
 
     @Test
     void shouldNotChangePasswordWhenNewPasswordIsEmpty() throws Exception {
-        shouldNotCreateWhenEmailIsInvalid("");
+        shouldNotChangePasswordWhenNewPasswordIsInvalid("");
     }
 
     @Test
     void shouldNotChangePasswordWhenNewPasswordIsBlank() throws Exception {
-        shouldNotCreateWhenEmailIsInvalid(" ");
+        shouldNotChangePasswordWhenNewPasswordIsInvalid(" ");
     }
 
     private void shouldNotChangePasswordWhenNewPasswordIsInvalid(String invalidNewPassword) throws Exception {
@@ -149,17 +154,17 @@ class UserControllerTest {
 
     @Test
     void shouldNotChangePasswordWhenOldPasswordIsNull() throws Exception {
-        shouldNotCreateWhenEmailIsInvalid(null);
+        shouldNotChangePasswordWhenOldPasswordIsInvalid(null);
     }
 
     @Test
     void shouldNotChangePasswordWhenOldPasswordIsEmpty() throws Exception {
-        shouldNotCreateWhenEmailIsInvalid("");
+        shouldNotChangePasswordWhenOldPasswordIsInvalid("");
     }
 
     @Test
     void shouldNotChangePasswordWhenOldPasswordIsBlank() throws Exception {
-        shouldNotCreateWhenEmailIsInvalid(" ");
+        shouldNotChangePasswordWhenOldPasswordIsInvalid(" ");
     }
 
     private void shouldNotChangePasswordWhenOldPasswordIsInvalid(String invalidOldPassword) throws Exception {

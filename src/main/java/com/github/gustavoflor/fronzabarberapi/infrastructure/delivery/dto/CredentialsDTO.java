@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.util.HashSet;
 
@@ -16,6 +17,7 @@ import java.util.HashSet;
 public class CredentialsDTO {
 
     @NotBlank
+    @Email
     private String email;
 
     @NotBlank

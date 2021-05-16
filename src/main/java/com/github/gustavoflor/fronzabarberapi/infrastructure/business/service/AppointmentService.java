@@ -11,7 +11,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -26,9 +25,6 @@ public class AppointmentService {
     public Appointment insert(AppointmentCreateDTO appointmentCreateDTO) {
         Appointment appointment = appointmentCreateDTO.transform();
         appointment.setClient(userService.getCurrentUser().orElseThrow(() -> new AccessDeniedException("Acesso negado")));
-        if (appointment.getDate().isBefore(LocalDateTime.now())) {
-            throw new AppointmentDateInPastException();
-        }
         appointment.setPending();
         return appointmentRepository.saveAndFlush(appointment);
     }

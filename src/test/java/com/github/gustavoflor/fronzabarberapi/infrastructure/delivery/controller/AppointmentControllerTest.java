@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
@@ -58,6 +59,20 @@ class AppointmentControllerTest {
     void shouldNotCreateWhenDateIsNull() throws Exception {
         AppointmentCreateDTO appointmentCreateDTO = AppointmentCreateDTOTestHelper.dummy();
         appointmentCreateDTO.setDate(null);
+        doCreateRequest(appointmentCreateDTO).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldNotCreateWhenDateInPast() throws Exception {
+        AppointmentCreateDTO appointmentCreateDTO = AppointmentCreateDTOTestHelper.dummy();
+        appointmentCreateDTO.setDate(LocalDateTime.now().minusDays(5L));
+        doCreateRequest(appointmentCreateDTO).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldNotCreateWhenDateInPresent() throws Exception {
+        AppointmentCreateDTO appointmentCreateDTO = AppointmentCreateDTOTestHelper.dummy();
+        appointmentCreateDTO.setDate(LocalDateTime.now());
         doCreateRequest(appointmentCreateDTO).andExpect(status().isBadRequest());
     }
 
