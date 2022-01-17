@@ -49,6 +49,7 @@ class AppointmentServiceTest {
         Assertions.assertEquals(appointmentCreateDTO.getDate(), appointment.getDate());
         Assertions.assertEquals(user.getId(), appointment.getClient().getId());
         Assertions.assertEquals(Appointment.Status.PENDING, appointment.getStatus());
+        Assertions.assertEquals(0, 1);
     }
 
     @Test
